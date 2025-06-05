@@ -37,12 +37,44 @@ pieces.push({image:"./images/Chess_rdt60.png", x:0,y:7})
 pieces.push({image:"./images/Chess_rlt60.png", x:7,y:0})
 pieces.push({image:"./images/Chess_rlt60.png", x:7,y:7})
 
+let activePiece:HTMLElement | null= null; 
 
 function grabPiece(e:React.MouseEvent<HTMLElement, MouseEvent>)
 {
-    console.log(e.target); 
+    const element= e.target as HTMLElement; 
+    if (element.classList.contains("chessPiece"))
+    {
+        console.log("Got")
+        const x= e.clientX-50;
+        const y= e.clientY-50; 
+        element.style.position="absolute"; 
+        element.style.left= `${x}px`;
+        element.style.top= `${y}px`; 
+        activePiece=element; 
+
+    }
+}
+function movePiece(e:React.MouseEvent)
+{
+    const element = e.target as HTMLElement;
+    if (activePiece)
+    {
+        console.log(element);
+        const x= e.clientX-50;
+        const y= e.clientY-50; 
+        activePiece.style.position="absolute"; 
+        activePiece.style.left= `${x}px`;
+        activePiece.style.top= `${y}px`; 
+    }
 }
 
+function dropPiece(e:React.MouseEvent)
+{
+    if (activePiece)
+    {
+        activePiece=null; 
+    }
+}
 
 export default function Chessboard() 
 {
@@ -63,7 +95,7 @@ export default function Chessboard()
         }
     }
     return(
-    <div id="chessboard" onMouseDown={e => grabPiece(e)}> 
+    <div id="chessboard" onMouseMove= {(e) => movePiece(e)} onMouseDown={e => grabPiece(e)} onMouseUp={e=>dropPiece(e) }> 
          {board}
     </div>
     ); 
